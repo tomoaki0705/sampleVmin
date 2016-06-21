@@ -37,20 +37,28 @@ inline void dump4(short* ptr)
 		std::cout << '\t' << ptr[i];
 }
 
-int main(int argc, char**argv)
+void debugVmin(short* a, short* b)
 {
-	const short _orig0[] = {1, 2, 4,  8,  16, 32,  64, 128, }; 
-	const short _orig1[] = {3, 6, 12, 24, 48, 96, 192, 256, }; 
-	int16x8_t orig0 = vld1q_s16(_orig0);
-	int16x8_t orig1 = vld1q_s16(_orig1);
+	int16x8_t orig0 = vld1q_s16(a);
+	int16x8_t orig1 = vld1q_s16(b);
 
 	int16_t result_min = getMin(orig0, orig1);
 
-	std::cout << "minimum: " << result_min << std::endl;
+	std::cout << "a   :"; dump8(a); std::cout << std::endl;
+	std::cout << "b   :"; dump8(b); std::cout << std::endl;
+	std::cout << "result:\t" << result_min << std::endl;
 	std::cout << "min0:"; dump8(dump_min0); std::cout << std::endl;
 	std::cout << "min1:"; dump4(dump_min1); std::cout << std::endl;
 	std::cout << "min2:"; dump4(dump_min2); std::cout << std::endl;
 	std::cout << "min3:"; dump4(dump_min3); std::cout << std::endl;
+}
+
+int main(int argc, char**argv)
+{
+	short _orig0[] = {1, 2, 4,  8,  16, 32,  64, 128, }; 
+	short _orig1[] = {3, 6, 12, 24, 48, 96, 192, 256, }; 
+
+	debugVmin(_orig0, _orig1);
 
     return 0;
 }
