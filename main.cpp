@@ -7,29 +7,23 @@ short dump_max[4];
 short dump_zero[4];
 short dump_min0[8];
 short dump_min1[4];
-short dump_min2[8];
+short dump_min2[4];
 short dump_min3[4];
-short dump_min4[8];
-short dump_min5[4];
 
 int16_t getMin(int16x8_t orig0, int16x8_t orig1)
 {
-	int16x4_t _max = vdup_n_s16(0x7fff);                  vst1_s16(dump_max, _max);
-	int16x4_t zero = vdup_n_s16(0);                       vst1_s16(dump_zero, zero);
-	int16x8_t min0 = vminq_s16(orig0, orig1);             vst1q_s16(dump_min0, min0);
+	int16x4_t _max = vdup_n_s16(0x7fff);      vst1_s16(dump_max, _max);
+	int16x4_t zero = vdup_n_s16(0);           vst1_s16(dump_zero, zero);
+	int16x8_t min0 = vminq_s16(orig0, orig1); vst1q_s16(dump_min0, min0);
 	// min0 <- {1, 2, 4, 8, 16, 32, 64, 128 }
 	int16x4_t min1 = vpmin_s16(vget_low_s16(min0), vget_high_s16(min0));
-	                                                      vst1_s16(dump_min1, min1);
+	                                          vst1_s16(dump_min1, min1);
 	// min1 <- {1, 4, 16, 64}
-	//int16x4x2_t min2 = vzip_s16(min1, _max);              vst2_s16(dump_min2, min2);
-	//// min2 <- {{1, 0x7fff, 2, 0x7fff}, {4, 0x7fff, 8, 0x7fff}}
-	int16x4_t min3 = vpmin_s16(min1, _max);               vst1_s16(dump_min3, min3);
-	// min3 <- {1, 16, 0x7fff, 0x7fff}
-	//int16x4x2_t min4 = vzip_s16(min3, _max);              vst2_s16(dump_min4, min4);
-	//// min4 <- {{1, 0x7fff, 0x7fff, 0x7fff},{2, 0x7fff, 0x7fff, 0x7fff}}
-	int16x4_t min5 = vpmin_s16(min3, _max);               vst1_s16(dump_min5, min5);
-	// min5 <- {1, 0x7fff, 0x7fff, 0x7fff}
-	return vget_lane_s16(min5, 0);
+	int16x4_t min2 = vpmin_s16(min1, _max);   vst1_s16(dump_min2, min2);
+	// min2 <- {1, 16, 0x7fff, 0x7fff}
+	int16x4_t min3 = vpmin_s16(min2, _max);   vst1_s16(dump_min3, min3);
+	// min3 <- {1, 0x7fff, 0x7fff, 0x7fff}
+	return vget_lane_s16(min3, 0);
 }
 
 inline void dump8(short* ptr)
@@ -56,10 +50,8 @@ int main(int argc, char**argv)
 	std::cout << "minimum: " << result_min << std::endl;
 	std::cout << "min0:"; dump8(dump_min0); std::cout << std::endl;
 	std::cout << "min1:"; dump4(dump_min1); std::cout << std::endl;
-	std::cout << "min2:"; dump8(dump_min2); std::cout << std::endl;
+	std::cout << "min2:"; dump4(dump_min2); std::cout << std::endl;
 	std::cout << "min3:"; dump4(dump_min3); std::cout << std::endl;
-	std::cout << "min4:"; dump8(dump_min4); std::cout << std::endl;
-	std::cout << "min5:"; dump4(dump_min5); std::cout << std::endl;
 	std::cout << "max :"; dump4(dump_max);  std::cout << std::endl;
 	std::cout << "zero:"; dump4(dump_zero); std::cout << std::endl;
 
