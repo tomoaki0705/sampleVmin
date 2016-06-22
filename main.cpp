@@ -55,8 +55,8 @@ void debugVmin(short* a, short* b)
 
 int main(int argc, char**argv)
 {
-	short _orig0[] = {1, 2, 4,  8,  16, 32,  64, 128, }; 
-	short _orig1[] = {3, 6, 12, 24, 48, 96, 192, 256, }; 
+	short _orig0[] = {1, 2, 4, 8, 16,32,64,128,}; 
+	short _orig1[] = {10,10,10,10,10,10,10,10, }; 
 
 	debugVmin(_orig0, _orig1);
 
